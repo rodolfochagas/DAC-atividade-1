@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hello;
 
 import java.io.IOException;
@@ -33,7 +28,6 @@ public class HelloServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
@@ -57,46 +51,9 @@ public class HelloServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException { 
         
-        String msg = "";
-        
-        String lang = request.getParameter("lang");
-        if(lang==null)
-            lang = "pt";
-        switch(lang){
-            case "pt":
-                msg = "Alô, ";
-                break;
-            case "en":
-                msg = "Hello, ";
-                break;
-            case "fr":
-                msg = "Bonjour, ";
-                break;
-        }
-        
-        String nome = request.getParameter("nome");
-
-        if(nome==null)
-            nome = "Fulano";
-        
-        msg = msg+nome+"!";
-
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet HelloServlet</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet HelloServlet</h1>");
-            out.println("<p>" + msg + "</p>");
-            out.println("</body>");
-            out.println("</html>");
-        }
+        getPage(request, response);
     }
 
     /**
@@ -110,47 +67,8 @@ public class HelloServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String msg = "";
         
-        String lang = request.getParameter("lang");
-        if(lang==null)
-            lang = "pt";
-        switch(lang){
-            case "pt":
-                msg = "Alô, ";
-                break;
-            case "en":
-                msg = "Hello, ";
-                break;
-            case "fr":
-                msg = "Bonjour, ";
-                break;
-            case "de":
-                msg = "Hallo, ";
-                break;
-        }
-        
-        String nome = request.getParameter("nome");
-
-        if(nome==null)
-            nome = "Fulano";
-        
-        msg = msg+nome+"!";
-
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet HelloServlet</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet HelloServlet</h1>");
-            out.println("<p>" + msg + "</p>");
-            out.println("</body>");
-            out.println("</html>");
-        }
+        getPage(request, response);
     }
 
     /**
@@ -162,5 +80,77 @@ public class HelloServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
+    private void getPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String msg = "";
+        
+        String lang = request.getParameter("lang");
+        if(lang==null)
+            lang = "pt";
+
+        switch(lang){
+            case "pt":
+                msg = "Olá! Boas vindas, ";
+                break;
+            case "en":
+                msg = "Hello! Welcome, ";
+                break;
+            case "fr":
+                msg = "Bonjour! Bienvenue, ";
+                break;
+            case "de":
+                msg = "Hallo! Herzlich willkommen, ";
+                break;
+            default:
+                msg = "Olá! Boas vindas, ";
+                break;
+        }
+        
+        String nome = request.getParameter("nome");
+
+        if(nome == null || nome.length() == 0)
+            nome = "Fulano";
+        
+        String sobrenome = request.getParameter("sobrenome");
+
+        if (sobrenome == null)
+            sobrenome = "de Tal";
+
+        msg = msg + nome + " " + sobrenome + "!";
+
+        String idadeString = request.getParameter("idade");
+
+        String periodoNascimento = "";
+
+        if (idadeString != null && isParseIntPossible(idadeString)){
+            int idade = Integer.parseInt(idadeString);
+            periodoNascimento = "Você nasceu entre " + (2021 - idade) + " e " + (2020 - idade) ;
+        }
+
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet HelloServlet</title>");            
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet HelloServlet</h1>");
+            out.println("<p>" + msg + "</p>");
+            if (periodoNascimento != "")
+                out.println("<p>" + periodoNascimento + "</p>");
+            out.println("</body>");
+            out.println("</html>");
+        }
+    }
+
+    private boolean isParseIntPossible(String value) {
+        try {
+            Integer.parseInt(value);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
 
 }
