@@ -83,26 +83,33 @@ public class HelloServlet extends HttpServlet {
 
     private void getPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String msg = "";
-        
+        String born = "";
+        String petName = "";
+
         String lang = request.getParameter("lang");
         if(lang==null)
             lang = "pt";
 
         switch(lang){
-            case "pt":
-                msg = "Olá! Boas vindas, ";
-                break;
             case "en":
                 msg = "Hello! Welcome, ";
+                born = "You were born between ";
+                petName = "Your pet's name is ";
                 break;
             case "fr":
                 msg = "Bonjour! Bienvenue, ";
+                born = "Tu es né entre ";
+                petName = "Le nom de votre animal est ";
                 break;
             case "de":
                 msg = "Hallo! Herzlich willkommen, ";
+                born = "Du wurdest zwischen geboren ";
+                petName = "Der Name Ihres Haustieres ist ";
                 break;
             default:
                 msg = "Olá! Boas vindas, ";
+                born = "Você nasceu entre ";
+                petName = "O nome do seu pet é ";
                 break;
         }
         
@@ -124,8 +131,10 @@ public class HelloServlet extends HttpServlet {
 
         if (idadeString != null && isParseIntPossible(idadeString)){
             int idade = Integer.parseInt(idadeString);
-            periodoNascimento = "Você nasceu entre " + (2021 - idade) + " e " + (2020 - idade) ;
+            periodoNascimento = born + (2021 - idade) + " & " + (2020 - idade) + "." ;
         }
+
+        String pet = request.getParameter("pet");
 
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
@@ -139,6 +148,8 @@ public class HelloServlet extends HttpServlet {
             out.println("<p>" + msg + "</p>");
             if (periodoNascimento != "")
                 out.println("<p>" + periodoNascimento + "</p>");
+            if (pet != null && pet != "")
+                out.println("<p>" + petName + pet + "." + "</p>");
             out.println("</body>");
             out.println("</html>");
         }
